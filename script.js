@@ -6,6 +6,14 @@ let firstValue = 0;
 let operatorValue = "";
 let awaitingNextValue = false;
 
+const calculate = {
+  "÷": (firstNumber, secondNumber) => firstNumber / secondNumber,
+  "+": (firstNumber, secondNumber) => firstNumber + secondNumber,
+  "-": (firstNumber, secondNumber) => firstNumber - secondNumber,
+  "×": (firstNumber, secondNumber) => firstNumber * secondNumber,
+  "=": (firstNumber, secondNumber) => secondNumber,
+};
+
 function sendNumberValue(number) {
   if (awaitingNextValue) {
     calculatorDisplay.textContent = number;
@@ -27,8 +35,16 @@ function addDecimal() {
 
 function useOperator(operator) {
   const currentValue = Number(calculatorDisplay.textContent);
+  if (operatorValue && awaitingNextValue) {
+    operatorValue = operator;
+    return;
+  }
   if (!firstValue) {
     firstValue = currentValue;
+  } else {
+    const calculation = calculate[operatorValue](firstValue, currentValue);
+    calculatorDisplay.textContent = calculation;
+    firstValue = calculation;
   }
   operatorValue = operator;
   awaitingNextValue = true;
